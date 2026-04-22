@@ -6,6 +6,7 @@ import com.example.calculator.data.repository.ExchangeRateRepository
 import com.example.calculator.domain.InputValidator
 import com.example.calculator.domain.ValidationResult
 import com.example.calculator.domain.model.Country
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,12 +15,19 @@ import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.Locale
 
+private val resultFormatter = NumberFormat.getNumberInstance(Locale.US).apply {
+    minimumFractionDigits = 2
+    maximumFractionDigits = 2
+}
+
 class CalculatorViewModel(
     private val repository: ExchangeRateRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CalculatorUiState())
     val uiState: StateFlow<CalculatorUiState> = _uiState.asStateFlow()
+
+    private var fetchJob: Job? = null
 
     init {
         fetchRates()
@@ -40,7 +48,8 @@ class CalculatorViewModel(
     }
 
     private fun fetchRates() {
-        viewModelScope.launch {
+        fetchJob?.cancel()
+        fetchJob = viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, networkError = null) }
             try {
                 val rates = repository.getExchangeRates()
@@ -60,22 +69,21 @@ class CalculatorViewModel(
             is ValidationResult.Empty -> {
                 _uiState.update { it.copy(conversionResult = null, inputError = null) }
             }
-
             is ValidationResult.Invalid -> {
                 _uiState.update { it.copy(conversionResult = null, inputError = "송금액이 바르지 않습니다") }
             }
-
             is ValidationResult.Valid -> {
                 val rate = state.currentRate
                 if (rate == null) {
                     _uiState.update { it.copy(conversionResult = null) }
                     return
                 }
-                val formatted = NumberFormat.getNumberInstance(Locale.US).apply {
-                    minimumFractionDigits = 2
-                    maximumFractionDigits = 2
-                }.format(result.amount * rate)
-                _uiState.update { it.copy(conversionResult = formatted, inputError = null) }
+                _uiState.update {
+                    it.copy(
+                        conversionResult = resultFormatter.format(result.amount * rate),
+                        inputError = null
+                    )
+                }
             }
         }
     }
