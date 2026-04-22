@@ -43,7 +43,7 @@ class CalculatorViewModel(
     }
 
     fun onAmountChanged(input: String) {
-        _uiState.update { it.copy(amountInput = input, inputError = null) }
+        _uiState.update { it.copy(amountInput = input) }
         recalculate()
     }
 
