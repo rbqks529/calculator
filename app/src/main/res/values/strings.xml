@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">송금 계산기</string>
+    <string name="app_name">환율 계산</string>
     <string name="label_sending_country">송금 국가</string>
     <string name="sending_country_value">미국 (USD)</string>
     <string name="label_receiving_country">수취 국가</string>
