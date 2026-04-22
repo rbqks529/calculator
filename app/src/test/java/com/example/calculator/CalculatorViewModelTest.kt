@@ -51,10 +51,10 @@ class CalculatorViewModelTest {
     }
 
     @Test
-    fun `국가 변경 시 선택 국가가 업데이트된다`() = runTest {
+    fun `국가 변경 시 환율이 재조회된다`() = runTest {
         viewModel.onCountrySelected(Country.JAPAN)
 
-        coVerify(exactly = 1) { mockRepository.getExchangeRates() }
+        coVerify(exactly = 2) { mockRepository.getExchangeRates() }
         assertEquals(Country.JAPAN, viewModel.uiState.value.selectedCountry)
     }
 

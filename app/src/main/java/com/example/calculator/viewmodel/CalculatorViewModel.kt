@@ -27,7 +27,7 @@ class CalculatorViewModel(
 
     fun onCountrySelected(country: Country) {
         _uiState.update { it.copy(selectedCountry = country) }
-        recalculate()
+        fetchRates()
     }
 
     fun refreshRates() {
