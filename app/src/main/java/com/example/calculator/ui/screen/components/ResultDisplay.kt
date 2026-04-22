@@ -30,7 +30,7 @@ fun ResultDisplay(
                 style = MaterialTheme.typography.bodyLarge
             )
             result != null -> Text(
-                text = "$result $currencyCode",
+                text = "수취금액은 $result $currencyCode 입니다.",
                 style = MaterialTheme.typography.headlineSmall
             )
         }

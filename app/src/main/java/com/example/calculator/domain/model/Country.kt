@@ -5,7 +5,7 @@ enum class Country(
     val currencyCode: String,
     val apiQuoteKey: String
 ) {
-    KOREA("Korea", "KRW", "USDKRW"),
-    JAPAN("Japan", "JPY", "USDJPY"),
-    PHILIPPINES("Philippines", "PHP", "USDPHP")
+    KOREA("한국", "KRW", "USDKRW"),
+    JAPAN("일본", "JPY", "USDJPY"),
+    PHILIPPINES("필리핀", "PHP", "USDPHP")
 }
